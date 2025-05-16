@@ -8,6 +8,7 @@ const public_users = express.Router();
 public_users.post("/register", (req,res) => {
   let username = req.body.username;
   let password = req.body.password;
+  
   if(!username || !password){
     res.send("Appropriate username or password was not provided.");
   }else{
@@ -36,23 +37,34 @@ public_users.get('/',function (req, res) {
 public_users.get('/isbn/:isbn',function (req, res) {
     //needs to be implemented
     const isbn = req.params.isbn;
-    res.send(books[isbn]);
-  
+    if(isbn){
+        if(books[isbn]){
+            res.send(books[isbn]);
+        }else{
+            res.send("Hmm..We could not find that book. Make sure the ISBN number is correct.");
+        }
+    }else{
+        res.send("ISBN number needed to complete this search.");
+    }
  });
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
     let author = req.params.author;
-    let keysArray = Object.keys(books);
-    let filteredBookKeys = keysArray.filter((key)=>books[key].author==author);
-    //check if there was a match detected by filter
-    if(filteredBookKeys.length>0){
-        filteredBookKeys.forEach((key)=>{
-            res.send(books[key]);
-        })
+    if(author){
+        let keysArray = Object.keys(books);
+        let filteredBookKeys = keysArray.filter((key)=>books[key].author==author);
+        //check if there was a match detected by filter
+        if(filteredBookKeys.length>0){
+            filteredBookKeys.forEach((key)=>{
+                res.send(books[key]);
+            })
         
+        }else{
+            res.send("No books were found by that author");
+        }
     }else{
-        res.send("No books were found by that author");
+        res.send("Author names are needed to complete an author search.");
     }
 
 });
@@ -61,16 +73,20 @@ public_users.get('/author/:author',function (req, res) {
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
     let title = req.params.title;
-    let keysArray = Object.keys(books);
-    let filteredBookKeys = keysArray.filter((key)=>books[key].title==title);
-    //check if there was a match detected by filter
-    if(filteredBookKeys.length>0){
-        filteredBookKeys.forEach((key)=>{
-            res.send(books[key]);
-        })
+    if(title){
+        let keysArray = Object.keys(books);
+        let filteredBookKeys = keysArray.filter((key)=>books[key].title==title);
+        //check if there was a match detected by filter
+        if(filteredBookKeys.length>0){
+            filteredBookKeys.forEach((key)=>{
+                res.send(books[key]);
+            })
+        }else{
+            res.send("No books were found by that title");
+        }
     }else{
-        res.send("No books were found by that title");
-    }
+        res.send("Titles are needed to complete a title search.");
+      }
 });
 
 //  Get book review
@@ -87,7 +103,7 @@ public_users.get('/review/:isbn',function (req, res) {
             res.send("That book has no reviews yet. Be the first!");
         }
     }else{
-        res.send("Hmm..We could not find that book. Make sure the ISBN number is correct.");
+        res.send("Hmm..We could not find reviews for that book. Make sure the ISBN number is correct.");
     }
   }else{
     res.send("ISBN number needed to complete reviews search.");
