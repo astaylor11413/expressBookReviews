@@ -33,23 +33,24 @@ const authenticatedUser = (username, password) => {
 regd_users.post("/login", (req,res) => {
   let username = req.body.username;
   let password = req.body.password;
-  if (!username || !password) {
-    res.send("Appropriate username or password was not provided.");
-   }else{
-    if(authenticatedUser(username,password)){
-       //JWT token
-        let accessToken = jwt.sign({
-            data: password
-        }, 'access', { expiresIn: 60 * 60 });
 
-        // Store token and username in session
-        req.session.authorization = {
-            accessToken, username
-        }
-        return res.status(200).send("User successfully logged in");
-    }else{
-        res.send("User has not been authenticated.");
-    }
+  if (username && password) {
+    if(authenticatedUser(username,password)){
+        //JWT token
+         let accessToken = jwt.sign({
+             data: password
+         }, 'access', { expiresIn: 60 * 60 });
+ 
+         // Store token and username in session
+         req.session.authorization = {
+             accessToken, username
+         }
+         return res.status(200).send("User successfully logged in");
+     }else{
+         res.send("User has not been authenticated.");
+     }
+   }else{
+    return res.status(404).json({ message: "Error logging in" });
    }
 });
 
