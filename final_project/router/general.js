@@ -76,11 +76,22 @@ public_users.get('/title/:title',function (req, res) {
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
   const isbn = req.params.isbn;
-  let reviewKeys = Object.keys(books[isbn].reviews);
-  reviewKeys.forEach((key)=>{
-    res.send(books[isbn].reviews[key]);
-  })
-  
+  if(isbn){
+    if(books[isbn]){
+        let reviewKeys = Object.keys(books[isbn].reviews);
+        if(reviewKeys.length>0){
+            reviewKeys.forEach((key)=>{
+                res.send(books[isbn].reviews[key]);
+            })
+        }else{
+            res.send("That book has no reviews yet. Be the first!");
+        }
+    }else{
+        res.send("Hmm..We could not find that book. Make sure the ISBN number is correct.");
+    }
+  }else{
+    res.send("ISBN number needed to complete reviews search.");
+  }
 });
 
 module.exports.general = public_users;
