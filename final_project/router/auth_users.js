@@ -54,10 +54,60 @@ regd_users.post("/login", (req,res) => {
    }
 });
 
-// Add a book review
+//add a book review
+regd_users.post("/auth/review/:isbn", (req, res) => {
+    /*
+    if(req.body.email){
+        friends[req.body.email]={
+            "firstName": req.body.firstName,
+            "lastName": req.body.lastName,
+            "DOB": req.body.DOB,
+        };
+      }
+      res.send("The user" + (' ') + (req.body.firstName) + " has been added!");
+    */
+});
+
+//modify a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  /*
+    const email = req.params.email;
+    let friend = friends[email];
+    if(friend){
+        let DOB = req.body.DOB;
+        let firstName = req.body.firstName;
+        let lastName = req.body.lastName;
+
+        if(DOB){
+            friend["DOB"] = DOB;
+        }
+        if(firstName){
+            friend["firstName"] = firstName;
+        }
+
+        if(lastName){
+            friends["lastName"]= lastName;
+        }
+
+        friends[email] = friend;
+        res.send(`Friend with the email ${email} updated.`);
+    }else{
+        res.send("Unable to find friend!");
+    }
+  */
+});
+
+//delete a book review
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+ /*
+    const email = req.params.email;
+    if(email){
+        if(friends[email]){
+            delete friends[email];
+        }
+        
+    }
+ */
 });
 
 module.exports.authenticated = regd_users;

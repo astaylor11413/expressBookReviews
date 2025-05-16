@@ -93,7 +93,7 @@ public_users.get('/review/:isbn',function (req, res) {
                 res.send(books[isbn].reviews[key]);
             })
         }else{
-            res.send("That book has no reviews yet. Be the first!");
+            res.send("That book has no reviews yet. Sign in and be the first!");
         }
     }else{
         res.send("Hmm..We could not find reviews for that book. Make sure the ISBN number is correct.");
