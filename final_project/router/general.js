@@ -62,15 +62,12 @@ public_users.get('/author/:author',function (req, res) {
 public_users.get('/title/:title',function (req, res) {
     let title = req.params.title;
     let keysArray = Object.keys(books);
-    let filteredBooks=[];
-    for(var i=0; i<keysArray.length;i++){
-        let book = books[(keysArray[i])];
-        if(book["title"]==title){
-            filteredBooks.push(book);
-        }
-    } 
-    if(filteredBooks.length>0){
-        res.send(filteredBooks);
+    let filteredBookKeys = keysArray.filter((key)=>books[key].title==title);
+    //check if there was a match detected by filter
+    if(filteredBookKeys.length>0){
+        filteredBookKeys.forEach((key)=>{
+            res.send(books[key]);
+        })
     }else{
         res.send("No books were found by that title");
     }
