@@ -1,8 +1,9 @@
 const express = require('express');
 let books = require("./booksdb.js");
-let isValid = require("./auth_users.js").isValid;
-let users = require("./auth_users.js").users;
+const isValid = require("./auth_users.js").isValid;
+const users = require("./auth_users.js").users;
 const public_users = express.Router();
+
 
 
 public_users.post("/register", (req,res) => {
@@ -14,7 +15,7 @@ public_users.post("/register", (req,res) => {
         res.send("User already exists! Go ahead and login.");
     }else{
         users.push({"username":username,"password":password});
-        res.send("The user "+ users[users.length>0?(users.length-1):0].username +" has been added");
+        res.send("The user "+ users[users.length>0?(users.length-1):0].username +" has been added as user #"+users.length);
     }
   }else{
     res.send("Appropriate username or password was not provided.");
