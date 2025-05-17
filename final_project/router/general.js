@@ -120,10 +120,8 @@ public_users.get('/review/:isbn',function (req, res) {
     if(books[isbn]){
         const reviewKeys = Object.keys(books[isbn].reviews);
         if(reviewKeys.length>0){
-            reviewKeys.forEach((reviewKey)=>{
-                let reviewSubmission = books[isbn].reviews[reviewKey];
-                res.send( reviewSubmission["Review"]+ " - "+ reviewSubmission["userName"]  );
-            })
+            res.send(books[isbn].reviews);
+            
         }else{
             res.send("That book has no reviews yet. Sign in and be the first!");
         }
