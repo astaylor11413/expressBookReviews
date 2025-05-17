@@ -87,11 +87,11 @@ regd_users.post("/auth/review/:isbn", (req, res) => {
         const isbn = req.params.isbn;
                 if(isbn){
                     if(books[isbn]){
-                        if(req.body.review){
+                        if(req.body.Review){
                             
                             books[isbn].reviews[Object.keys(books[isbn].reviews).length+1]={
                                 "userName":user,
-                                "Review": req.body.review,
+                                "Review": req.body.Review,
                             };
                         }else{
                             res.send("No review was submitted.");
@@ -150,6 +150,33 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
         
     }
  */
+    let user = authCheck(req); 
+    if(user){
+        const isbn = req.params.isbn;
+        if(isbn){
+            if(books[isbn]){
+                let reviewKeys = Object.keys(books[isbn].reviews);
+                if(reviewKeys.length>0){
+                    //find if there is a review the current user made
+                    let filteredKey = reviewKeys.filter((key)=>(
+                            books[isbn].reviews[key].userName==user
+                        )
+                    )
+                    if(filteredKey.length>0){
+                        delete books[isbn].reviews[filteredKey[0]];
+                    }else{
+                        res.send("You haven't made any reviews to delete on this book.");
+                    }
+                }else{
+                    res.send("That book has no reviews yet. Be the first!");
+                }
+            }else{
+                res.send("Hmm..We could not find reviews for that book. Make sure the ISBN number is correct.");
+            }
+        }else{
+            res.send("ISBN number needed to complete reviews search.");
+        }
+    }
 });
 
 module.exports.authenticated = regd_users;
