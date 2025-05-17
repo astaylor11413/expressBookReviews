@@ -8,7 +8,7 @@ let users = [];
 const isValid = (username)=>{ 
 //check if the username is valid
     let validNames = users.filter((user)=>{
-        username===user.username;
+        username==user.username;
     });
     if(validNames.length>0){
         return true;
@@ -20,7 +20,7 @@ const isValid = (username)=>{
 const authenticatedUser = (username, password) => {
     // Return true if any valid user is found, otherwise false
     let validUsers = users.filter((user) => {
-        isValid(username) && (user.password === password);
+        isValid(username) && (user.password == password);
     });    
     if (validUsers.length > 0) {
         return true;
@@ -33,10 +33,13 @@ const authCheck = (req) => {
         let token = req.session.authorization['accessToken'];
 
         try {
-            const user = jwt.verify(token, "access");
-            return user[username];
+            const decodedToken = jwt.verify(token, "access");
+            if(decodedToken!=null){
+                
+                return req.session.authorization['username'];
+            }
         } catch (ex) { 
-            return res.status(403).json({ message: "User not authenticated" });
+            return res.status(403).json({ message: "There was an error authenticating the current user. Please log in again." });
         }
     } else {
         return res.status(403).json({ message: "User not logged in" });
