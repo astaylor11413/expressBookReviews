@@ -74,7 +74,7 @@ regd_users.post("/auth/review/:isbn", (req, res) => {
                                     "review": req.body.review,
                                 };
                                 
-                                res.send("Your review has been accepted. Thanks! (See below)" + books[isbn].reviews);
+                                res.send("Your review has been accepted. Thanks! (See below)" + books[isbn].reviews[reviewKeys.length]);
                             }else{
                                 res.send("Couldn't find review object for this book -Sorry");
                             }
