@@ -45,7 +45,7 @@ regd_users.post("/login", (req,res) => {
          req.session.authorization = {
              accessToken, username
          }
-         return res.status(200).send("User successfully logged in");
+         return res.status(200).send(req.session.authorization.username +" successfully logged in- token: "+req.session.authorization.accessToken );
      }else{
          res.send("User has not been authenticated.");
      }
@@ -56,18 +56,29 @@ regd_users.post("/login", (req,res) => {
 
 //add a book review
 regd_users.post("/auth/review/:isbn", (req, res) => {
-    let user = req.session.authorization['username'];
+    
+    let user = req.session.authorization.username;
     if(user){
         
         const isbn = req.params.isbn;
                 if(isbn){
                     if(books[isbn]){
-                        if(req.body.Review){
+                        if(req.body.review){
                             
-                            books[isbn].reviews[Object.keys(books[isbn].reviews).length+1]={
-                                "userName":user,
-                                "Review": req.body.review,
-                            };
+                            let reviewKeys = Object.keys(books[isbn].reviews);
+                            if(reviewKeys){
+                                let nextIndex = reviewKeys.length+1;
+                                res.send("Starting the "+nextIndex +" review for: "+user);
+                                books[isbn].reviews[reviewKeys.length]={
+                                    "username":user,
+                                    "review": req.body.review,
+                                };
+                                
+                                res.send("Your review has been accepted. Thanks! (See below)" + books[isbn].reviews);
+                            }else{
+                                res.send("Couldn't find review object for this book -Sorry");
+                            }
+                            
                         }else{
                             res.send("No review was submitted.");
                         }
@@ -77,12 +88,16 @@ regd_users.post("/auth/review/:isbn", (req, res) => {
                 }else{
                     res.send("ISBN number needed to complete reviews search.");
                 }
+    }else{
+        res.send("Couldn't validate current user session. Log in again. ");
     }
 });
 
 //modify a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-    let user = req.session.authorization['username'];
+    res.send("Editing a review for: "+req.session.authorization.username);
+    
+    let user = req.session.authorization.username;
     if(user){
         
         const isbn = req.params.isbn;
@@ -90,14 +105,17 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
             if(books[isbn]){
                 let reviewKeys = Object.keys(books[isbn].reviews);
                 if(reviewKeys.length>0){
-                    let filteredKey = reviewKeys.filter((key)=>(
-                            books[isbn].reviews[key].userName===user
+                    let filteredKey = reviewKeys.filter((reviewKey)=>(
+                            books[isbn].reviews[reviewKey].username==user
                         )
                     );
                     if(filteredKey){
-                        let filteredBookReview = books[isbn].reviews[filteredKey];
+                        
+                       /* let filteredBookReview = books[isbn].reviews[filteredKey];
                         filteredBookReview['Review'] = req.body.review;
                         books[isbn].reviews[filteredKey] = filteredBookReview;
+                        */
+                        books[isbn].reviews[filteredKey].review = req.body.review;
                     }else{
                         res.send("You haven't made any reviews to update on this book yet. Add one today!");
                     }
@@ -110,14 +128,17 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
         }else{
             res.send("ISBN number needed to complete reviews search.");
         }
+    }else{
+        res.send("Couldn't validate current user session. Log in again. ");
     }
    
 });
 
 //delete a book review
 regd_users.delete("/auth/review/:isbn", (req, res) => {
-
-    let user = req.session.authorization['username'];
+    res.send("Deleting a review for: "+req.session.authorization.username);
+    
+    let user = req.session.authorization.username;
     if(user){
         const isbn = req.params.isbn;
         if(isbn){
@@ -125,8 +146,8 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
                 let reviewKeys = Object.keys(books[isbn].reviews);
                 if(reviewKeys.length>0){
                     //find if there is a review the current user made
-                    let filteredKey = reviewKeys.filter((key)=>(
-                            books[isbn].reviews[key].userName==user
+                    let filteredKey = reviewKeys.filter((reviewKey)=>(
+                            books[isbn].reviews[reviewKey].username==user
                         )
                     )
                     if(filteredKey.length>0){
@@ -143,6 +164,8 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
         }else{
             res.send("ISBN number needed to complete reviews search.");
         }
+    }else{
+        res.send("Couldn't validate current user session. Log in again. ");
     }
 });
 

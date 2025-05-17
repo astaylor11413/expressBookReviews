@@ -2,20 +2,7 @@ let books = {
       1: {
         "author": "Chinua Achebe",
         "title": "Things Fall Apart", 
-        "reviews": {
-            1: {
-                "userName":"Ashley T.",
-                "Review":"Great read!"
-            },
-            2: {
-                "userName": "Malyk L.", 
-                "Review":"Couldn't put it down. Highly Recommend!"
-            },
-            3: {
-                "userName": "Samuel G.",
-                "Review": "Best book this year for sure."
-            },
-        },
+        "reviews": {},
       }, 
       2: {"author": "Hans Christian Andersen","title": "Fairy tales", "reviews": {} },
       3: {"author": "Dante Alighieri","title": "The Divine Comedy", "reviews": {} },
