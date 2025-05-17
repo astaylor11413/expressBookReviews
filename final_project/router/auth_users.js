@@ -81,9 +81,9 @@ regd_users.post("/login", (req,res) => {
 
 //add a book review
 regd_users.post("/auth/review/:isbn", (req, res) => {
-    
-    if(authCheck(req)){
-        let user = authCheck(req);
+    let user = authCheck(req);
+    if(user){
+        
         const isbn = req.params.isbn;
                 if(isbn){
                     if(books[isbn]){
@@ -107,9 +107,9 @@ regd_users.post("/auth/review/:isbn", (req, res) => {
 
 //modify a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-      
-    if(authCheck(req)){
-        let user = authCheck(req);
+    let user = authCheck(req); 
+    if(user){
+        
         const isbn = req.params.isbn;
         if(isbn){
             if(books[isbn]){
