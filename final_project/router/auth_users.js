@@ -56,16 +56,38 @@ regd_users.post("/login", (req,res) => {
 
 //add a book review
 regd_users.post("/auth/review/:isbn", (req, res) => {
-    /*
-    if(req.body.email){
-        friends[req.body.email]={
-            "firstName": req.body.firstName,
-            "lastName": req.body.lastName,
-            "DOB": req.body.DOB,
-        };
-      }
-      res.send("The user" + (' ') + (req.body.firstName) + " has been added!");
-    */
+    if (req.session.authorization) {
+        let token = req.session.authorization['accessToken'];
+
+        // Verify JWT token
+        jwt.verify(token, "access", (err, user) => {
+            if (!err) {
+                req.user = user;
+                const isbn = req.params.isbn;
+                if(isbn){
+                    if(books[isbn]){
+                        if(req.body.review){
+                            
+                            books[isbn].reviews[Object.keys(books[isbn].reviews).length+1]={
+                                "userName":req.user,
+                                "Review": req.body.review,
+                            };
+                        }else{
+                            res.send("No review was submitted.");
+                        }
+                    }else{
+                        res.send("Hmm..We could not find that book. Make sure the ISBN number is correct.");
+                    }
+                }else{
+                    res.send("ISBN number needed to complete reviews search.");
+                }
+            } else {
+                return res.status(403).json({ message: "User not authenticated" });
+            }
+        });
+    } else {
+        return res.status(403).json({ message: "User not logged in" });
+    }
 });
 
 //modify a book review
@@ -95,6 +117,23 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
         res.send("Unable to find friend!");
     }
   */
+   const isbn = req.params.isbn;
+   if(isbn){
+        if(books[isbn]){
+            let reviewKeys = Object.keys(books[isbn].reviews);
+            if(reviewKeys.length>0){
+                reviewKeys.forEach((key)=>{
+                    res.send(books[isbn].reviews[key]);
+                })
+            }else{
+                res.send("That book has no reviews yet. Sign in and be the first!");
+            }
+        }else{
+            res.send("Hmm..We could not find reviews for that book. Make sure the ISBN number is correct.");
+        }
+   }else{
+    res.send("ISBN number needed to complete reviews search.");
+   }
 });
 
 //delete a book review
