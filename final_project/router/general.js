@@ -23,7 +23,14 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-  res.send(JSON.stringify(books,null,4));
+    let myPromise = new Promise((resolve) => {
+        setTimeout(() => {
+          resolve("Promise resolved")
+        },2000)});
+   myPromise.then((result) => {
+        console.log("Status of call: " + result);
+        res.send(JSON.stringify(books,null,4));
+    });
 });
 
 // Get book details based on ISBN
@@ -32,7 +39,14 @@ public_users.get('/isbn/:isbn',function (req, res) {
     const isbn = req.params.isbn;
     if(isbn){
         if(books[isbn]){
-            res.send(books[isbn]);
+            let myPromise = new Promise((resolve) => {
+                setTimeout(() => {
+                  resolve("Promise resolved")
+                },2000)});
+           myPromise.then((result) => {
+                console.log("Status of call: " + result);
+                res.send(books[isbn]);
+            });
         }else{
             res.send("Hmm..We could not find that book. Make sure the ISBN number is correct.");
         }
@@ -49,9 +63,17 @@ public_users.get('/author/:author',function (req, res) {
         let filteredBookKeys = keysArray.filter((key)=>books[key].author==author);
         //check if there was a match detected by filter
         if(filteredBookKeys.length>0){
-            filteredBookKeys.forEach((key)=>{
-                res.send(books[key]);
-            })
+            
+            let myPromise = new Promise((resolve) => {
+                setTimeout(() => {
+                  resolve("Promise resolved")
+                },2000)});
+           myPromise.then((result) => {
+                console.log("Status of call: " + result);
+                filteredBookKeys.forEach((key)=>{
+                    res.send(books[key]);
+                })
+            });
         
         }else{
             res.send("No books were found by that author");
@@ -71,9 +93,17 @@ public_users.get('/title/:title',function (req, res) {
         let filteredBookKeys = keysArray.filter((key)=>books[key].title==title);
         //check if there was a match detected by filter
         if(filteredBookKeys.length>0){
-            filteredBookKeys.forEach((key)=>{
-                res.send(books[key]);
-            })
+            
+            let myPromise = new Promise((resolve) => {
+                setTimeout(() => {
+                  resolve("Promise resolved")
+                },2000)});
+           myPromise.then((result) => {
+                console.log("Status of call: " + result);
+                filteredBookKeys.forEach((key)=>{
+                    res.send(books[key]);
+                });
+            });
         }else{
             res.send("No books were found by that title");
         }

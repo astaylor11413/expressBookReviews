@@ -141,15 +141,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 
 //delete a book review
 regd_users.delete("/auth/review/:isbn", (req, res) => {
- /*
-    const email = req.params.email;
-    if(email){
-        if(friends[email]){
-            delete friends[email];
-        }
-        
-    }
- */
+
     let user = authCheck(req); 
     if(user){
         const isbn = req.params.isbn;
