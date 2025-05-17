@@ -111,7 +111,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
                     if(filteredKey){
                                                
                         books[isbn].reviews[filteredKey].review = req.body.review;
-                        res.send("Found your old review! The new one has been submitted. Thanks! (See below)"+ books[isbn].reviews);
+                        res.send("Found your old review! The new one has been submitted. Thanks! (See below)"+ books[isbn].reviews[filteredKey]);
                     }else{
                         res.send("You haven't made any reviews to update on this book yet. Add one today!");
                     }
