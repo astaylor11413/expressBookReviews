@@ -32,20 +32,9 @@ const authCheck = (req) => {
     if (req.session.authorization) {
         let token = req.session.authorization['accessToken'];
 
-        // Verify JWT token
-        /*
-        jwt.verify(token, "access", (err, user) => {
-            if (!err) {
-                req.user = user;
-                next();
-            } else {
-                return res.status(403).json({ message: "User not authenticated" });
-            }
-        });
-        */
         try {
             const user = jwt.verify(token, "access");
-            return user;
+            return user[username];
         } catch (ex) { 
             return res.status(403).json({ message: "User not authenticated" });
         }
