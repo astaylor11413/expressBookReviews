@@ -11,7 +11,7 @@ public_users.post("/register", (req,res) => {
 
   if(username && password){
     if(isValid(username)){
-        res.send("User already exists!");
+        res.send("User already exists! Go ahead and login.");
     }else{
         users.push({"username":username,"password":password});
         res.send("The user "+ users[users.length>0?(users.length-1):0].username +" has been added");
@@ -117,10 +117,11 @@ public_users.get('/review/:isbn',function (req, res) {
   const isbn = req.params.isbn;
   if(isbn){
     if(books[isbn]){
-        let reviewKeys = Object.keys(books[isbn].reviews);
+        const reviewKeys = Object.keys(books[isbn].reviews);
         if(reviewKeys.length>0){
-            reviewKeys.forEach((key)=>{
-                res.send(books[isbn].reviews[key]);
+            reviewKeys.forEach((reviewKey)=>{
+                let reviewSubmission = books[isbn].reviews[reviewKey];
+                res.send( reviewSubmission["Review"]+ " - "+ reviewSubmission["userName"]  );
             })
         }else{
             res.send("That book has no reviews yet. Sign in and be the first!");
