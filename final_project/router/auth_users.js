@@ -95,8 +95,7 @@ regd_users.post("/auth/review/:isbn", (req, res) => {
 
 //modify a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-    res.send("Editing a review for: "+req.session.authorization.username);
-    
+     
     let user = req.session.authorization.username;
     if(user){
         
@@ -110,12 +109,9 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
                         )
                     );
                     if(filteredKey){
-                        
-                       /* let filteredBookReview = books[isbn].reviews[filteredKey];
-                        filteredBookReview['Review'] = req.body.review;
-                        books[isbn].reviews[filteredKey] = filteredBookReview;
-                        */
+                                               
                         books[isbn].reviews[filteredKey].review = req.body.review;
+                        res.send("Found your old review! The new one has been submitted. Thanks! (See below)"+ books[isbn].reviews);
                     }else{
                         res.send("You haven't made any reviews to update on this book yet. Add one today!");
                     }
