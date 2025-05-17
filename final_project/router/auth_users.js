@@ -28,23 +28,6 @@ const authenticatedUser = (username, password) => {
         return false;
     }
 }
-const authCheck = (req) => {
-    if (req.session.authorization) {
-        let token = req.session.authorization['accessToken'];
-
-        try {
-            const decodedToken = jwt.verify(token, "access");
-            if(decodedToken!=null){
-                
-                return req.session.authorization['username'];
-            }
-        } catch (ex) { 
-            return res.status(403).json({ message: "There was an error authenticating the current user. Please log in again." });
-        }
-    } else {
-        return res.status(403).json({ message: "User not logged in" });
-    }
-}
 
 //only registered users can login
 regd_users.post("/login", (req,res) => {
@@ -73,7 +56,7 @@ regd_users.post("/login", (req,res) => {
 
 //add a book review
 regd_users.post("/auth/review/:isbn", (req, res) => {
-    let user = authCheck(req);
+    let user = req.session.authorization['username'];
     if(user){
         
         const isbn = req.params.isbn;
@@ -83,7 +66,7 @@ regd_users.post("/auth/review/:isbn", (req, res) => {
                             
                             books[isbn].reviews[Object.keys(books[isbn].reviews).length+1]={
                                 "userName":user,
-                                "Review": req.body.Review,
+                                "Review": req.body.review,
                             };
                         }else{
                             res.send("No review was submitted.");
@@ -99,7 +82,7 @@ regd_users.post("/auth/review/:isbn", (req, res) => {
 
 //modify a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-    let user = authCheck(req); 
+    let user = req.session.authorization['username'];
     if(user){
         
         const isbn = req.params.isbn;
@@ -108,12 +91,12 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
                 let reviewKeys = Object.keys(books[isbn].reviews);
                 if(reviewKeys.length>0){
                     let filteredKey = reviewKeys.filter((key)=>(
-                            books[isbn].reviews[key].userName==user
+                            books[isbn].reviews[key].userName===user
                         )
-                    )
+                    );
                     if(filteredKey){
                         let filteredBookReview = books[isbn].reviews[filteredKey];
-                        filteredBookReview["Review"] = req.body.Review;
+                        filteredBookReview['Review'] = req.body.review;
                         books[isbn].reviews[filteredKey] = filteredBookReview;
                     }else{
                         res.send("You haven't made any reviews to update on this book yet. Add one today!");
@@ -134,7 +117,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 //delete a book review
 regd_users.delete("/auth/review/:isbn", (req, res) => {
 
-    let user = authCheck(req); 
+    let user = req.session.authorization['username'];
     if(user){
         const isbn = req.params.isbn;
         if(isbn){
