@@ -29,8 +29,8 @@ public_users.get('/',function (req, res) {
     let myPromise = new Promise((resolve,reject) => {
         setTimeout(() => {
             if(books){
-                res.send(JSON.stringify(books,null,4));
-                resolve("Promise resolved");
+                
+                resolve(res.send(JSON.stringify(books,null,4)));
             }else{
                 reject(new Error("Failed to send data"));
             }
@@ -52,8 +52,8 @@ public_users.get('/isbn/:isbn',function (req, res) {
         let myPromise = new Promise((resolve,reject) => {
             setTimeout(() => {
                 if(books[isbn]){
-                    res.send(books[isbn]);
-                    resolve("Promise resolved");
+                    
+                    resolve(res.send(books[isbn]));
                 }else{
                     reject(new Error("Error: Could not find book with that isbn"));
                 }
@@ -81,8 +81,7 @@ public_users.get('/author/:author',function (req, res) {
                     filteredBookKeys.forEach((key)=>{
                         filteredBooks.push(books[key]);
                     })
-                    res.send("Here are the books written by "+author+":"+JSON.stringify(filteredBooks));
-                    resolve("Promise resolved")
+                    resolve(res.send("Here are the books written by "+author+":"+JSON.stringify(filteredBooks)));
                 }else{
                     reject(new Error("Error:No books were found by that author"));
                 }
@@ -112,8 +111,7 @@ public_users.get('/title/:title',function (req, res) {
                     filteredBookKeys.forEach((key)=>{
                         filteredBooks.push(books[key]);
                     })
-                    res.send("Here are the books with the title "+title+":"+JSON.stringify(filteredBooks));
-                    resolve("Promise resolved")
+                    resolve(res.send("Here are the books with the title "+title+":"+JSON.stringify(filteredBooks)));
                 }else{
                     reject(new Error("Error:No books were found by that title"));
                 }
