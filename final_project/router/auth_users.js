@@ -146,7 +146,7 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
                     )
                     if(filteredKey.length>0){
                         delete books[isbn].reviews[filteredKey[0]];
-                        res.send("Deleted your review for "+books[isbn].title+" by "+books[isbn].author+": "+ books[isbn]);
+                        res.send("Deleted your review for "+books[isbn].title+" by "+books[isbn].author+": "+ JSON.stringify(books[isbn].reviews));
                     }else{
                         res.send("You haven't made any reviews to delete on this book.");
                     }
