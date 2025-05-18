@@ -59,22 +59,21 @@ regd_users.post("/auth/review/:isbn", (req, res) => {
     
     let user = req.session.authorization.username;
     if(user){
-        
+        const review = req.query.review;
         const isbn = req.params.isbn;
                 if(isbn){
                     if(books[isbn]){
-                        if(req.body.review){
+                        if(review){
                             
                             let reviewKeys = Object.keys(books[isbn].reviews);
                             if(reviewKeys){
                                 let nextIndex = reviewKeys.length+1;
-                                res.send("Starting the "+nextIndex +" review for: "+user);
                                 books[isbn].reviews[reviewKeys.length]={
                                     "username":user,
-                                    "review": req.body.review,
+                                    "review": review,
                                 };
                                 
-                                res.send("Your review has been accepted. Thanks! (See below)" + books[isbn].reviews[reviewKeys.length]);
+                                res.send("Your review has been accepted. Thanks! (See below)" + JSON.stringify(books[isbn].reviews));
                             }else{
                                 res.send("Couldn't find review object for this book -Sorry");
                             }
@@ -98,7 +97,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
      
     let user = req.session.authorization.username;
     if(user){
-        
+        const review = req.query.review; 
         const isbn = req.params.isbn;
         if(isbn){
             if(books[isbn]){
@@ -110,8 +109,8 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
                     );
                     if(filteredKey){
                                                
-                        books[isbn].reviews[filteredKey].review = req.body.review;
-                        res.send("Found your old review! The new one has been submitted. Thanks! (See below)"+ books[isbn].reviews[filteredKey]);
+                        books[isbn].reviews[filteredKey].review = review;
+                        res.send("Found your old review! The new one has been submitted. Thanks! (See below)"+ JSON.stringify(books[isbn].reviews));
                     }else{
                         res.send("You haven't made any reviews to update on this book yet. Add one today!");
                     }
